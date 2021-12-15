@@ -1,0 +1,21 @@
+package com.tsu.projectX.entities;
+
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Set;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = "role_table")
+public class Role {
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+    private String name;
+
+    @OneToMany(mappedBy = "role")
+    private Set<User> users;
+}
