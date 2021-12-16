@@ -1,5 +1,6 @@
 package com.tsu.projectX.services.interfaces;
 
+import com.tsu.projectX.data.UserRegiter;
 import com.tsu.projectX.entities.User;
 
 import java.util.List;

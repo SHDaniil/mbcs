@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface IUserRepository extends JpaRepository<User, UUID> {
+
+    User findByNickname(String nickname);
+    User findByAuthToken(UUID authToken);
 }

@@ -1,6 +1,7 @@
 package com.tsu.projectX.controllers;
 
 import com.tsu.projectX.entities.User;
+import com.tsu.projectX.services.interfaces.IAuthenticationService;
 import com.tsu.projectX.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,11 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RestController("/users")
+@RestController()
+@RequestMapping(path = "/users")
 public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IAuthenticationService authenticationService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody User user) {
@@ -30,8 +35,8 @@ public class UserController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAll() {
+    @GetMapping()
+    public ResponseEntity<List<User>> getAll(@RequestHeader(name = "auth-token") UUID authToken) {
         List<User> users = userService.getAll();
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(users, HttpStatus.OK)
