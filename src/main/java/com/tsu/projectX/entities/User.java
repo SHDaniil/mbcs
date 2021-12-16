@@ -22,9 +22,9 @@ public class User {
 
     private UUID authToken;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+//    @ManyToOne
+//    @JoinColumn(name = "role_id")
+    private String role;
 
     public User(
             String nickname,
@@ -34,7 +34,7 @@ public class User {
             String password,
             String team,
             UUID authToken,
-            Role role) {
+            String role) {
         this.nickname = nickname;
         this.name = name;
         this.lastName = lastName;

@@ -8,10 +8,27 @@ import com.tsu.projectX.services.interfaces.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
+
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_PLAYER = "ROLE_PLAYER";
+    public static final String ROLE_MANAGER = "ROLE_MANAGER";
+    public static final String ROLE_COACH = "ROLE_COACH";
+
+    public static final List<String> ROLES = new ArrayList<>();
+    static {
+        ROLES.add(ROLE_ADMIN);
+        ROLES.add(ROLE_USER);
+        ROLES.add(ROLE_PLAYER);
+        ROLES.add(ROLE_MANAGER);
+        ROLES.add(ROLE_COACH);
+    }
 
     @Autowired
     private IUserRepository userRepository;
