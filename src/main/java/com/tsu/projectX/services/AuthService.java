@@ -1,5 +1,6 @@
 package com.tsu.projectX.services;
 
+import com.tsu.projectX.data.LoginResponse;
 import com.tsu.projectX.data.UserLogin;
 import com.tsu.projectX.data.UserRegiter;
 import com.tsu.projectX.entities.User;
@@ -22,14 +23,14 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public UUID login(UserLogin userLogin) {
+    public LoginResponse login(UserLogin userLogin) {
         User userFromDB = userRepository.findByNickname(userLogin.getNickname());
         if (userFromDB == null) {
             return null;
         }
 
         return userFromDB.getPassword().equals(userLogin.getPassword())
-                ? userFromDB.getAuthToken()
+                ? new LoginResponse(userFromDB.getAuthToken(), userFromDB.getRole())
                 : null;
     }
 
