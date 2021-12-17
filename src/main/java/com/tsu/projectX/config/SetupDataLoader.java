@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.tsu.projectX.services.AuthenticationService.ROLES;
-import static com.tsu.projectX.services.AuthenticationService.ROLE_PLAYER;
+import static com.tsu.projectX.config.AuthConfig.ROLES;
+import static com.tsu.projectX.config.AuthConfig.ROLE_PLAYER;
+
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {

@@ -2,7 +2,7 @@ package com.tsu.projectX.controllers;
 
 import com.tsu.projectX.data.UserData;
 import com.tsu.projectX.entities.User;
-import com.tsu.projectX.services.interfaces.IAuthenticationService;
+import com.tsu.projectX.services.interfaces.IAuthService;
 import com.tsu.projectX.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class UserController {
     private IUserService userService;
 
     @Autowired
-    private IAuthenticationService authenticationService;
+    private IAuthService authService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody User user) {

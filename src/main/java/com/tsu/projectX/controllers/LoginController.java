@@ -1,8 +1,7 @@
 package com.tsu.projectX.controllers;
 
 import com.tsu.projectX.data.UserLogin;
-import com.tsu.projectX.services.interfaces.IAuthenticationService;
-import com.tsu.projectX.services.interfaces.IUserService;
+import com.tsu.projectX.services.interfaces.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +19,11 @@ import java.util.UUID;
 public class LoginController {
 
     @Autowired
-    private IAuthenticationService authenticationService;
+    private IAuthService authService;
 
     @PostMapping
     public ResponseEntity<UUID> login(@RequestBody UserLogin userLogin) {
-        UUID authToken = authenticationService.login(userLogin);
+        UUID authToken = authService.login(userLogin);
         return authToken != null
                 ? new ResponseEntity<>(authToken, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);

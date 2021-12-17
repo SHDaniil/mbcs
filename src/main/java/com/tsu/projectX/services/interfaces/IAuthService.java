@@ -5,7 +5,7 @@ import com.tsu.projectX.data.UserRegiter;
 
 import java.util.UUID;
 
-public interface IAuthenticationService {
+public interface IAuthService {
 
     boolean checkAuthToken(UUID authToken);
     UUID login(UserLogin userLogin);

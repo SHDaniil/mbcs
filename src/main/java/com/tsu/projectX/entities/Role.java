@@ -3,7 +3,6 @@ package com.tsu.projectX.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
