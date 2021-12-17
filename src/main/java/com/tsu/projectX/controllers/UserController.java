@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController()
+@CrossOrigin
 @RequestMapping(path = "/users")
 public class UserController {
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> getAll(@RequestHeader(name = "auth-token") UUID authToken) {
+    public ResponseEntity<List<User>> getAll() {
         List<User> users = userService.getAll();
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(users, HttpStatus.OK)
