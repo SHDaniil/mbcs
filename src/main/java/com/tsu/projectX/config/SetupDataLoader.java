@@ -38,6 +38,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 "qwerty",
                 null,
                 UUID.randomUUID(),
+//                roleRepository.findByName(ROLE_PLAYER))); //TODO Fix
                 ROLE_PLAYER));
     }
 

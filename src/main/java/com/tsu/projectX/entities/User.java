@@ -1,6 +1,7 @@
 package com.tsu.projectX.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class User {
 
     private UUID authToken;
 
-//    @ManyToOne
+//    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "role_id")
     private String role;
 

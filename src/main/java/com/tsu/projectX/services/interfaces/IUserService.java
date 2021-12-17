@@ -1,6 +1,6 @@
 package com.tsu.projectX.services.interfaces;
 
-import com.tsu.projectX.data.UserRegiter;
+import com.tsu.projectX.data.UserData;
 import com.tsu.projectX.entities.User;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface IUserService {
 
     boolean create(User user);
 
-    boolean update(UUID id, User user);
+    boolean update(UUID id, UserData userData);
 
     boolean delete(UUID id);
 }

@@ -1,5 +1,6 @@
 package com.tsu.projectX.controllers;
 
+import com.tsu.projectX.data.UserData;
 import com.tsu.projectX.entities.User;
 import com.tsu.projectX.services.interfaces.IAuthenticationService;
 import com.tsu.projectX.services.interfaces.IUserService;
@@ -24,8 +25,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody User user) {
-        userService.create(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return userService.create(user)
+                ? new ResponseEntity<>(HttpStatus.CREATED)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("{id}")
@@ -45,8 +47,8 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody User user) {
-        boolean updated = userService.update(id, user);
+    public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody UserData userData) {
+        boolean updated = userService.update(id, userData);
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

@@ -1,5 +1,6 @@
 package com.tsu.projectX.services;
 
+import com.tsu.projectX.data.UserData;
 import com.tsu.projectX.entities.User;
 import com.tsu.projectX.repositories.IUserRepository;
 import com.tsu.projectX.services.interfaces.IUserService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,7 +19,8 @@ public class UserService implements IUserService {
 
     @Override
     public User get(UUID id) {
-        return userRepository.getById(id);
+        Optional<User> userFromDb = userRepository.findById(id);
+        return userFromDb.orElse(null);
     }
 
     @Override
@@ -27,32 +30,36 @@ public class UserService implements IUserService {
 
     @Override
     public boolean create(User user) {
-        userRepository.saveAndFlush(user);
-
-        //TODO
+        User userFromDb = userRepository.findByNickname(user.getNickname());
+        if (userFromDb == null) {
+            return false;
+        }
+        userRepository.save(user);
         return true;
     }
 
     @Override
-    public boolean update(UUID id, User user) {
-        User userFromDb = get(id);
+    public boolean update(UUID id, UserData userData) {
+        User userFromDb = userRepository.getById(id);
+        if (userFromDb.getId() == null) {
+            return false;
+        }
 
-        userFromDb.setNickname(user.getNickname());
-        userFromDb.setName(user.getName());
-        userFromDb.setLastName(user.getLastName());
-        userFromDb.setEmail(user.getEmail());
-        userFromDb.setTeam(user.getTeam());
-        userRepository.saveAndFlush(userFromDb);
-
-        //TODO
+        userFromDb.setNickname(userData.getNickname());
+        userFromDb.setName(userData.getName());
+        userFromDb.setLastName(userData.getLastName());
+        userFromDb.setEmail(userData.getEmail());
+        userFromDb.setTeam(userData.getTeam());
+        userRepository.save(userFromDb);
         return true;
     }
 
     @Override
     public boolean delete(UUID id) {
-        userRepository.deleteById(id);
-
-        //TODO
-        return true;
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
