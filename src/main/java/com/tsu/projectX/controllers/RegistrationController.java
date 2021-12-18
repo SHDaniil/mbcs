@@ -1,6 +1,7 @@
 package com.tsu.projectX.controllers;
 
 import com.tsu.projectX.data.UserRegiter;
+import com.tsu.projectX.data.responseDto.AuthResponse;
 import com.tsu.projectX.services.interfaces.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,14 @@ public class RegistrationController {
     private IAuthService authService;
 
     @PostMapping()
-    public ResponseEntity<?> registration(@RequestBody UserRegiter userRegiter) {
+    public ResponseEntity<AuthResponse> registration(@RequestBody UserRegiter userRegiter) {
         if (!userRegiter.getPassword().equals(userRegiter.getPasswordConfirm())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (!authService.registerNewUserAccount(userRegiter)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        AuthResponse authResponse = authService.registerNewUserAccount(userRegiter);
+        return authResponse != null
+                ? new ResponseEntity<>(authResponse,HttpStatus.CREATED)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

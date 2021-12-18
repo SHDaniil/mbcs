@@ -1,9 +1,10 @@
 package com.tsu.projectX.services;
 
-import com.tsu.projectX.data.LoginResponse;
+import com.tsu.projectX.data.responseDto.AuthResponse;
 import com.tsu.projectX.data.UserLogin;
 import com.tsu.projectX.data.UserRegiter;
 import com.tsu.projectX.entities.User;
+import com.tsu.projectX.repositories.IRoleRepository;
 import com.tsu.projectX.repositories.IUserRepository;
 import com.tsu.projectX.services.interfaces.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.tsu.projectX.config.AuthConfig.ROLE_USER;
+
 @Service
 public class AuthService implements IAuthService {
 
     @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    private IRoleRepository roleRepository;
 
     @Override
     public boolean checkAuthToken(UUID authToken) {
@@ -23,33 +29,26 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public LoginResponse login(UserLogin userLogin) {
+    public AuthResponse login(UserLogin userLogin) {
         User userFromDB = userRepository.findByNickname(userLogin.getNickname());
         if (userFromDB == null) {
             return null;
         }
-
         return userFromDB.getPassword().equals(userLogin.getPassword())
-                ? new LoginResponse(userFromDB.getAuthToken(), userFromDB.getRole())
+                ? AuthResponse.fromUser(userFromDB)
                 : null;
     }
 
     @Override
-    //TODO Refactor
-    public boolean registerNewUserAccount(UserRegiter userRegiter) {
-        User userFromDB = userRepository.findByNickname(userRegiter.getNickname());
-        if (userFromDB != null) {
-            return false;
+    public AuthResponse registerNewUserAccount(UserRegiter userRegiter) {
+        User userFromDb = userRepository.findByNickname(userRegiter.getNickname());
+        if (userFromDb != null) {
+            return null;
         }
-
-        User user = new User();
-        user.setNickname(userRegiter.getNickname());
-        user.setName(userRegiter.getName());
-        user.setLastName(userRegiter.getLastName());
-        user.setPassword(userRegiter.getPassword());
-        user.setEmail(userRegiter.getEmail());
+        User user = userRegiter.toUser();
+        user.setRole(roleRepository.findByName(ROLE_USER));
         user.setAuthToken(UUID.randomUUID());
-        userRepository.saveAndFlush(user);
-        return true;
+        userRepository.save(user);
+        return AuthResponse.fromUser(user);
     }
 }

@@ -1,12 +1,15 @@
 package com.tsu.projectX.services;
 
-import com.tsu.projectX.data.UserData;
+import com.tsu.projectX.data.requestDto.UserRequestDto;
+import com.tsu.projectX.data.responseDto.UserResponseDto;
 import com.tsu.projectX.entities.User;
+import com.tsu.projectX.repositories.IRoleRepository;
 import com.tsu.projectX.repositories.IUserRepository;
 import com.tsu.projectX.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,15 +20,25 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private IRoleRepository roleRepository;
+
     @Override
-    public User get(UUID id) {
-        Optional<User> userFromDb = userRepository.findById(id);
-        return userFromDb.orElse(null);
+    public UserResponseDto get(UUID id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            return null;
+        }
+        return UserResponseDto.fromUser(user.get());
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getAll() {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return UserResponseDto.fromListUser(users);
     }
 
     @Override
@@ -39,17 +52,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean update(UUID id, UserData userData) {
+    public boolean update(UUID id, UserRequestDto userRequestDto) {
         User userFromDb = userRepository.getById(id);
         if (userFromDb.getId() == null) {
             return false;
         }
 
-        userFromDb.setNickname(userData.getNickname());
-        userFromDb.setName(userData.getName());
-        userFromDb.setLastName(userData.getLastName());
-        userFromDb.setEmail(userData.getEmail());
-        userFromDb.setTeam(userData.getTeam());
+        userRequestDto.modifyUser(userFromDb);
+        userFromDb.setRole(roleRepository.findByName(userRequestDto.getRole()));
         userRepository.save(userFromDb);
         return true;
     }

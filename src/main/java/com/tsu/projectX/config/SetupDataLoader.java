@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.tsu.projectX.config.AuthConfig.ROLES;
-import static com.tsu.projectX.config.AuthConfig.ROLE_PLAYER;
+import static com.tsu.projectX.config.AuthConfig.*;
 
 
 @Component
@@ -31,16 +30,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             createRoleIfNotFound(nameRole);
         }
 
-        userRepository.save(new User(
-                "s1mple",
-                "Aleksandr",
-                "Kostyliev",
-                "s1mple@connectivegames.ru",
-                "qwerty",
-                null,
-                UUID.randomUUID(),
-//                roleRepository.findByName(ROLE_PLAYER))); //TODO Fix
-                ROLE_PLAYER));
+        //ADMIN
+        createUserIfNotFound("admin", null, "Admin", null, ROLE_ADMIN);
+
+        //NAVI
+        createUserIfNotFound("s1mple", "ru", "qwerty", null, ROLE_PLAYER);
+        createUserIfNotFound("Boombl4", "ru", "qwerty", null, ROLE_PLAYER);
     }
 
     @Transactional
@@ -49,6 +44,21 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if (role == null) {
             role = new Role(name);
             roleRepository.save(role);
+        }
+    }
+
+    @Transactional
+    void createUserIfNotFound(String nickname, String country, String password, String team, String role) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null) {
+            user = new User();
+            user.setNickname(nickname);
+            user.setCountry(country);
+            user.setPassword(password);
+            user.setTeam(team);
+            user.setRole(roleRepository.findByName(role));
+            user.setAuthToken(UUID.randomUUID());
+            userRepository.save(user);
         }
     }
 }

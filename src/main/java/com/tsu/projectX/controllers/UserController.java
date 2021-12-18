@@ -1,6 +1,7 @@
 package com.tsu.projectX.controllers;
 
-import com.tsu.projectX.data.UserData;
+import com.tsu.projectX.data.requestDto.UserRequestDto;
+import com.tsu.projectX.data.responseDto.UserResponseDto;
 import com.tsu.projectX.entities.User;
 import com.tsu.projectX.services.interfaces.IAuthService;
 import com.tsu.projectX.services.interfaces.IUserService;
@@ -31,24 +32,24 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<User> get(@PathVariable(name = "id") UUID id) {
-        User user = userService.get(id);
+    public ResponseEntity<UserResponseDto> get(@PathVariable(name = "id") UUID id) {
+        UserResponseDto user = userService.get(id);
         return user != null
                 ? new ResponseEntity<>(user, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> getAll() {
-        List<User> users = userService.getAll();
+    public ResponseEntity<List<UserResponseDto>> getAll() {
+        List<UserResponseDto> users = userService.getAll();
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(users, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody UserData userData) {
-        boolean updated = userService.update(id, userData);
+    public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody UserRequestDto userRequestDto) {
+        boolean updated = userService.update(id, userRequestDto);
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

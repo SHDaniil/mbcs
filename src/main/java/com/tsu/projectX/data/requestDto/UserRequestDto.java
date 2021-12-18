@@ -1,23 +1,22 @@
-package com.tsu.projectX.data;
+package com.tsu.projectX.data.requestDto;
 
 import com.tsu.projectX.entities.User;
 import lombok.Data;
 
 @Data
-public class UserRegiter {
+public class UserRequestDto {
 
     private String nickname;
     private String country;
-    private String wantedRole;
     private String password;
-    private String passwordConfirm;
+    private String team;
+    private String role;
 
-    public User toUser() {
-        User user = new User();
+    public void modifyUser(User user) {
         user.setNickname(nickname);
         user.setCountry(country);
-        user.setWantedRole(wantedRole);
         user.setPassword(password);
-        return user;
+        user.setTeam(team);
     }
+
 }

@@ -15,31 +15,26 @@ public class User {
     @GeneratedValue
     private UUID id;
     private String nickname;
-    private String name;
-    private String lastName;
-    private String email;
+    private String country;
     private String password;
     private String team;
 
     private UUID authToken;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "role_id")
-    private String role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
+    private String wantedRole;
 
     public User(
             String nickname,
-            String name,
-            String lastName,
-            String email,
+            String country,
             String password,
             String team,
             UUID authToken,
-            String role) {
+            Role role) {
         this.nickname = nickname;
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
+        this.country = country;
         this.password = password;
         this.team = team;
         this.authToken = authToken;
