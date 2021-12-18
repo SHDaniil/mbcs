@@ -2,8 +2,10 @@ package com.tsu.projectX.services;
 
 import com.tsu.projectX.data.requestDto.UserRequestDto;
 import com.tsu.projectX.data.responseDto.UserResponseDto;
+import com.tsu.projectX.entities.Team;
 import com.tsu.projectX.entities.User;
 import com.tsu.projectX.repositories.IRoleRepository;
+import com.tsu.projectX.repositories.ITeamRepository;
 import com.tsu.projectX.repositories.IUserRepository;
 import com.tsu.projectX.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,10 @@ public class UserService implements IUserService {
 
     @Autowired
     private IUserRepository userRepository;
-
     @Autowired
     private IRoleRepository roleRepository;
+    @Autowired
+    private ITeamRepository teamRepository;
 
     @Override
     public UserResponseDto get(UUID id) {
@@ -59,6 +62,12 @@ public class UserService implements IUserService {
         }
 
         userRequestDto.modifyUser(userFromDb);
+        Team team = teamRepository.findByName(userRequestDto.getTeam());
+        //TODO
+        if (team != null) {
+            userFromDb.setTeam(team);
+        }
+
         userFromDb.setRole(roleRepository.findByName(userRequestDto.getRole()));
         userRepository.save(userFromDb);
         return true;

@@ -13,6 +13,7 @@ public class Role {
 
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private UUID id;
     private String name;
 

@@ -16,7 +16,5 @@ public class UserRequestDto {
         user.setNickname(nickname);
         user.setCountry(country);
         user.setPassword(password);
-        user.setTeam(team);
     }
-
 }

@@ -1,8 +1,10 @@
 package com.tsu.projectX.config;
 
 import com.tsu.projectX.entities.Role;
+import com.tsu.projectX.entities.Team;
 import com.tsu.projectX.entities.User;
 import com.tsu.projectX.repositories.IRoleRepository;
+import com.tsu.projectX.repositories.ITeamRepository;
 import com.tsu.projectX.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -20,9 +22,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     private IUserRepository userRepository;
-
     @Autowired
     private IRoleRepository roleRepository;
+    @Autowired
+    private ITeamRepository teamRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -34,8 +37,21 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createUserIfNotFound("admin", null, "Admin", null, ROLE_ADMIN);
 
         //NAVI
-        createUserIfNotFound("s1mple", "ru", "qwerty", null, ROLE_PLAYER);
-        createUserIfNotFound("Boombl4", "ru", "qwerty", null, ROLE_PLAYER);
+        createTeamIfNotFound("Natus Vincere", "Russia", "#1", "232", "23.2");
+        createUserIfNotFound("s1mple", "uk", "qwerty", "Natus Vincere", ROLE_PLAYER);
+        createUserIfNotFound("Boombl4", "ru", "qwerty", "Natus Vincere", ROLE_PLAYER);
+        createUserIfNotFound("electronic", "ru", "qwerty", "Natus Vincere", ROLE_PLAYER);
+        createUserIfNotFound("Perfecto", "ru", "qwerty", "Natus Vincere", ROLE_PLAYER);
+        createUserIfNotFound("B1t", "uk", "qwerty", "Natus Vincere", ROLE_PLAYER);
+        createUserIfNotFound("B1ad3", "uk", "qwerty", null, ROLE_COACH);
+        createUserIfNotFound("Shpuntik", "uk", "qwerty", null, ROLE_MANAGER);
+        Team natusVincere = teamRepository.findByName("Natus Vincere");
+        natusVincere.setCoach(userRepository.findByNickname("B1ad3"));
+        natusVincere.setManager(userRepository.findByNickname("Shpuntik"));
+        teamRepository.save(natusVincere);
+
+        //Virtus.pro
+        createTeamIfNotFound("Virtus.pro", "Russia", "#2", "111", "23.2");
     }
 
     @Transactional
@@ -55,10 +71,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             user.setNickname(nickname);
             user.setCountry(country);
             user.setPassword(password);
-            user.setTeam(team);
+            user.setTeam(teamRepository.findByName(team));
             user.setRole(roleRepository.findByName(role));
             user.setAuthToken(UUID.randomUUID());
             userRepository.save(user);
+        }
+    }
+
+    void createTeamIfNotFound(String name, String country, String ranking, String topTime, String averageAge) {
+        Team team = teamRepository.findByName(name);
+        if (team == null) {
+            team = new Team();
+            team.setName(name);
+            team.setCountry(country);
+            team.setRanking(ranking);
+            team.setTopTime(topTime);
+            team.setAverageAge(averageAge);
+            teamRepository.save(team);
         }
     }
 }

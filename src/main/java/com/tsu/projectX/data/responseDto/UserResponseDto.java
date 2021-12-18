@@ -17,6 +17,7 @@ public class UserResponseDto {
     private String country;
     private String password;
     private String team;
+    private String wantedTeam;
     private String role;
     private String wantedRole;
 
@@ -26,7 +27,8 @@ public class UserResponseDto {
                 user.getNickname(),
                 user.getCountry(),
                 user.getPassword(),
-                user.getTeam(),
+                user.getTeam() == null ? null : user.getTeam().getName(),
+                user.getWantedTeam(),
                 user.getRole().getName(),
                 user.getWantedRole()
         );
