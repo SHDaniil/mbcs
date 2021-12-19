@@ -22,6 +22,7 @@ public class TeamResponseDto {
     private List<UserResponseDto> players;
     private UserResponseDto coach;
     private UserResponseDto manager;
+    private List<CommentResponseDto> comments;
 
     public static TeamResponseDto fromTeam(Team team) {
         return new TeamResponseDto(
@@ -33,8 +34,8 @@ public class TeamResponseDto {
                 team.getAverageAge(),
                 team.getPlayers() == null ? null : UserResponseDto.fromListUser(team.getPlayers()),
                 team.getCoach() == null ? null : UserResponseDto.fromUser(team.getCoach()),
-                team.getManager() == null ? null : UserResponseDto.fromUser(team.getManager())
-        );
+                team.getManager() == null ? null : UserResponseDto.fromUser(team.getManager()),
+                CommentResponseDto.fromListComment(team.getComments()));
     }
 
     public static List<TeamResponseDto> fromListTeam(List<Team> teams) {

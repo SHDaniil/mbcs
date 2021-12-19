@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -28,4 +27,7 @@ public class Team {
     private User coach;
     @OneToOne(mappedBy = "managingTeam")
     private User manager;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team")
+    private List<Comment> comments;
 }
