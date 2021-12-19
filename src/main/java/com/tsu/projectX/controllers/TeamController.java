@@ -1,5 +1,6 @@
 package com.tsu.projectX.controllers;
 
+import com.tsu.projectX.data.requestDto.AddUserTeam;
 import com.tsu.projectX.data.responseDto.TeamResponseDto;
 import com.tsu.projectX.services.interfaces.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +35,17 @@ public class TeamController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/addCoach/")
-    private ResponseEntity<TeamResponseDto> addCoach(
-            @PathParam(value = "team_id") UUID teamId,
-            @PathParam(value = "user_id") UUID userId) {
-        TeamResponseDto team = teamService.addCoach(teamId, userId);
+    @PutMapping("/addCoach")
+    private ResponseEntity<TeamResponseDto> addCoach(@RequestBody AddUserTeam request) {
+        TeamResponseDto team = teamService.addCoach(request.getTeamId(), request.getUserId());
         return team != null
                 ? new ResponseEntity<>(team, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping
-    private ResponseEntity<TeamResponseDto> addManager(
-            @PathParam(value = "team_id") UUID teamId,
-            @PathParam(value = "user_id") UUID userId) {
-        TeamResponseDto team = teamService.addManager(teamId, userId);
+    @PutMapping("/addManager")
+    private ResponseEntity<TeamResponseDto> addManager(@RequestBody AddUserTeam request) {
+        TeamResponseDto team = teamService.addManager(request.getTeamId(), request.getUserId());
         return team != null
                 ? new ResponseEntity<>(team, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
