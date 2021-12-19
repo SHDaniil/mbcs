@@ -34,9 +34,9 @@ public class UserResponseDto {
         String role = user.getRole().getName();
         String team;
         if (ROLE_COACH.equals(role)) {
-            team = user.getCouchingTeam().getName();
+            team = user.getCouchingTeam() == null ? null : user.getCouchingTeam().getName();
         } else if (ROLE_MANAGER.equals(role)) {
-            team = user.getManagingTeam().getName();
+            team = user.getManagingTeam() == null ? null : user.getManagingTeam().getName();
         } else {
             team = user.getTeam() == null ? null : user.getTeam().getName();
         }

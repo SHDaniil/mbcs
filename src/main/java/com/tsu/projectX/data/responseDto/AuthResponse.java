@@ -10,13 +10,17 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AuthResponse {
 
-    private UUID authToken;
+    private UUID id;
     private String role;
+    private String team;
+    private UUID authToken;
 
     public static AuthResponse fromUser(User user) {
+        UserResponseDto userResponseDto = UserResponseDto.fromUser(user);
         return new AuthResponse(
-                user.getAuthToken(),
-                user.getRole().getName()
-        );
+                userResponseDto.getId(),
+                userResponseDto.getRole(),
+                userResponseDto.getTeam(),
+                user.getAuthToken());
     }
 }

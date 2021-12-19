@@ -87,7 +87,7 @@ public class TeamService implements ITeamService {
         Team team = optionalTeam.get();
         User user = optionalUser.get();
         if (team.getPlayers().size() > 5
-                || user.getTeam().equals(team)
+                || team.equals(user.getTeam())
                 || !ROLE_PLAYER.equals(user.getRole().getName())) {
             return false;
         }
