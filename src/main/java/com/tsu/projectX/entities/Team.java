@@ -21,14 +21,11 @@ public class Team {
     private String topTime;
     private String averageAge;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "team")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "team")
     private List<User> players;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "coach_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "couchingTeam")
     private User coach;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "managingTeam")
     private User manager;
 }

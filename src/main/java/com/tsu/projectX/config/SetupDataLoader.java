@@ -46,9 +46,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createUserIfNotFound("B1ad3", "uk", "qwerty", null, ROLE_COACH);
         createUserIfNotFound("Shpuntik", "uk", "qwerty", null, ROLE_MANAGER);
         Team natusVincere = teamRepository.findByName("Natus Vincere");
-        natusVincere.setCoach(userRepository.findByNickname("B1ad3"));
-        natusVincere.setManager(userRepository.findByNickname("Shpuntik"));
-        teamRepository.save(natusVincere);
+        User user = userRepository.findByNickname("B1ad3");
+        User user1 = userRepository.findByNickname("Shpuntik");
+        user.setCouchingTeam(natusVincere);
+        user1.setManagingTeam(natusVincere);
+        userRepository.save(user);
+        userRepository.save(user1);
 
         //Virtus.pro
         createTeamIfNotFound("Virtus.pro", "Russia", "#2", "111", "23.2");

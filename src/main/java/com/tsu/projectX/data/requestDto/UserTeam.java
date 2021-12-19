@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class AddUserTeam {
+public class UserTeam {
 
     private UUID teamId;
     private UUID userId;

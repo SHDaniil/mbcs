@@ -30,5 +30,13 @@ public class User {
     private Role role;
     private String wantedRole;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "couching_team_id", referencedColumnName = "id")
+    private Team couchingTeam;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "managing_team_id", referencedColumnName = "id")
+    private Team managingTeam;
+
     private UUID authToken;
 }

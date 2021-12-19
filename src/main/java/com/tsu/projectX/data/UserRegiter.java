@@ -9,6 +9,7 @@ public class UserRegiter {
     private String nickname;
     private String country;
     private String wantedRole;
+    private String wantedTeam;
     private String password;
     private String passwordConfirm;
 
@@ -17,6 +18,7 @@ public class UserRegiter {
         user.setNickname(nickname);
         user.setCountry(country);
         user.setWantedRole(wantedRole);
+        user.setWantedTeam(wantedTeam);
         user.setPassword(password);
         return user;
     }

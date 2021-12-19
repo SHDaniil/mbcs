@@ -4,5 +4,7 @@ import java.util.UUID;
 
 public interface IAdminService {
 
-    boolean approveUserRole(UUID id);
+    boolean approveUser(UUID id);
+
+    boolean rejectUser(UUID id);
 }

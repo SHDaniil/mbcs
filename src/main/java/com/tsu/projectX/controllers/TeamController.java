@@ -1,6 +1,6 @@
 package com.tsu.projectX.controllers;
 
-import com.tsu.projectX.data.requestDto.AddUserTeam;
+import com.tsu.projectX.data.requestDto.UserTeam;
 import com.tsu.projectX.data.responseDto.TeamResponseDto;
 import com.tsu.projectX.services.interfaces.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,18 +35,50 @@ public class TeamController {
     }
 
     @PutMapping("/addCoach")
-    private ResponseEntity<TeamResponseDto> addCoach(@RequestBody AddUserTeam request) {
-        TeamResponseDto team = teamService.addCoach(request.getTeamId(), request.getUserId());
-        return team != null
-                ? new ResponseEntity<>(team, HttpStatus.OK)
+    private ResponseEntity<?> addCoach(@RequestBody UserTeam request) {
+        boolean added = teamService.addCoach(request.getTeamId(), request.getUserId());
+        return added
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/addManager")
-    private ResponseEntity<TeamResponseDto> addManager(@RequestBody AddUserTeam request) {
-        TeamResponseDto team = teamService.addManager(request.getTeamId(), request.getUserId());
-        return team != null
-                ? new ResponseEntity<>(team, HttpStatus.OK)
+    private ResponseEntity<?> addManager(@RequestBody UserTeam request) {
+        boolean added = teamService.addManager(request.getTeamId(), request.getUserId());
+        return added
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/addPlayer")
+    private ResponseEntity<?> addPlayer(@RequestBody UserTeam request) {
+        boolean added = teamService.addPlayer(request.getTeamId(), request.getUserId());
+        return added
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/deleteCoach")
+    private ResponseEntity<?> deleteCoach(@RequestBody UserTeam request) {
+        boolean deleted = teamService.deleteCoach(request.getTeamId(), request.getUserId());
+        return deleted
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/deleteManager")
+    private ResponseEntity<?> deleteManager(@RequestBody UserTeam request) {
+        boolean deleted = teamService.deleteManager(request.getTeamId(), request.getUserId());
+        return deleted
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/deletePlayer")
+    private ResponseEntity<?> deletePlayer(@RequestBody UserTeam request) {
+        boolean deleted = teamService.deletePlayer(request.getTeamId(), request.getUserId());
+        return deleted
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

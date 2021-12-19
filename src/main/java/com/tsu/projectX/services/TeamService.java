@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.tsu.projectX.config.AuthConfig.ROLE_COACH;
-import static com.tsu.projectX.config.AuthConfig.ROLE_MANAGER;
+import static com.tsu.projectX.config.AuthConfig.*;
 
 @Service
 public class TeamService implements ITeamService {
@@ -44,43 +43,110 @@ public class TeamService implements ITeamService {
     }
 
     @Override
-    public TeamResponseDto addCoach(UUID teamId, UUID userId) {
+    public boolean addCoach(UUID teamId, UUID userId) {
         Optional<Team> optionalTeam = teamRepository.findById(teamId);
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalTeam.isEmpty() || optionalUser.isEmpty()) {
-            return null;
+            return false;
         }
 
-        Team team = optionalTeam.get();
         User user = optionalUser.get();
         if (!ROLE_COACH.equals(user.getRole().getName())) {
-            return null;
+            return false;
         }
-        team.setCoach(user);
-        teamRepository.save(team);
-        return TeamResponseDto.fromTeam(team);
+        user.setCouchingTeam(optionalTeam.get());
+        userRepository.save(user);
+        return true;
     }
 
     @Override
-    public TeamResponseDto addManager(UUID teamId, UUID userId) {
+    public boolean addManager(UUID teamId, UUID userId) {
         Optional<Team> optionalTeam = teamRepository.findById(teamId);
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalTeam.isEmpty() || optionalUser.isEmpty()) {
-            return null;
+            return false;
+        }
+
+        User user = optionalUser.get();
+        if (!ROLE_MANAGER.equals(user.getRole().getName())) {
+            return false;
+        }
+        user.setManagingTeam(optionalTeam.get());
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean addPlayer(UUID teamId, UUID userId) {
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalTeam.isEmpty() || optionalUser.isEmpty()) {
+            return false;
         }
 
         Team team = optionalTeam.get();
         User user = optionalUser.get();
-        if (!ROLE_MANAGER.equals(user.getRole().getName())) {
-            return null;
+        if (team.getPlayers().size() > 5
+                || user.getTeam().equals(team)
+                || !ROLE_PLAYER.equals(user.getRole().getName())) {
+            return false;
         }
-        team.setManager(user);
-        teamRepository.save(team);
-        return TeamResponseDto.fromTeam(team);
+        user.setTeam(team);
+        userRepository.save(user);
+        return true;
     }
 
     @Override
-    public Team addPlayer(UUID id) {
-        return null;
+    public boolean deleteCoach(UUID teamId, UUID userId) {
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalTeam.isEmpty() || optionalUser.isEmpty()) {
+            return false;
+        }
+
+        Team team = optionalTeam.get();
+        User user = optionalUser.get();
+        if (!user.getCouchingTeam().getName().equals(team.getName())) {
+            return false;
+        }
+        user.setCouchingTeam(null);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean deleteManager(UUID teamId, UUID userId) {
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalTeam.isEmpty() || optionalUser.isEmpty()) {
+            return false;
+        }
+
+        Team team = optionalTeam.get();
+        User user = optionalUser.get();
+        if (!user.getManagingTeam().getName().equals(team.getName())) {
+            return false;
+        }
+        user.setManagingTeam(null);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean deletePlayer(UUID teamId, UUID userId) {
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalTeam.isEmpty() || optionalUser.isEmpty()) {
+            return false;
+        }
+
+        Team team = optionalTeam.get();
+        User user = optionalUser.get();
+        if (!user.getTeam().getName().equals(team.getName())) {
+            return false;
+        }
+        user.setTeam(null);
+        userRepository.save(user);
+        return true;
     }
 }
