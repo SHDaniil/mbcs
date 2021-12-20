@@ -51,7 +51,8 @@ public class TeamService implements ITeamService {
         }
 
         User user = optionalUser.get();
-        if (!ROLE_COACH.equals(user.getRole().getName())) {
+        if (!ROLE_COACH.equals(user.getRole().getName())
+                || user.getCouchingTeam() != null) {
             return false;
         }
         user.setCouchingTeam(optionalTeam.get());
@@ -87,7 +88,7 @@ public class TeamService implements ITeamService {
         Team team = optionalTeam.get();
         User user = optionalUser.get();
         if (team.getPlayers().size() > 5
-                || team.equals(user.getTeam())
+                || user.getTeam() != null
                 || !ROLE_PLAYER.equals(user.getRole().getName())) {
             return false;
         }

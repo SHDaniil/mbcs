@@ -51,6 +51,4 @@ public class AdminController {
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
-
 }
