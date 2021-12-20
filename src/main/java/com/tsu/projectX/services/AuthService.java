@@ -10,7 +10,10 @@ import com.tsu.projectX.services.interfaces.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.tsu.projectX.config.AuthConfig.ROLE_USER;
 
@@ -19,13 +22,18 @@ public class AuthService implements IAuthService {
 
     @Autowired
     private IUserRepository userRepository;
-
     @Autowired
     private IRoleRepository roleRepository;
 
     @Override
-    public boolean checkAuthToken(UUID authToken) {
-        return userRepository.findByAuthToken(authToken) != null;
+    public boolean checkAuthAndPermission(UUID authToken, String... roles) {
+        User user = userRepository.findByAuthToken(authToken);
+        if (user == null) {
+            return false;
+        }
+
+        List<String> rolesList = Arrays.stream(roles).collect(Collectors.toList());
+        return rolesList.isEmpty() || rolesList.contains(user.getRole().getName());
     }
 
     @Override

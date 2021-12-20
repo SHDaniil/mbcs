@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface IAuthService {
 
-    boolean checkAuthToken(UUID authToken);
+    boolean checkAuthAndPermission(UUID authToken, String... roles);
     AuthResponse login(UserLogin userLogin);
     AuthResponse registerNewUserAccount(UserRegiter userRegiter);
 }
