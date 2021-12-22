@@ -150,4 +150,13 @@ public class TeamService implements ITeamService {
         userRepository.save(user);
         return true;
     }
+
+    @Override
+    public boolean compare(Team team, UUID teamId) {
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        if (optionalTeam.isEmpty()) {
+            return false;
+        }
+        return team.equals(optionalTeam.get());
+    }
 }

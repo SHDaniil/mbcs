@@ -27,6 +27,11 @@ public class UserService implements IUserService {
     private ITeamRepository teamRepository;
 
     @Override
+    public User getByAuthToken(UUID authToken) {
+        return userRepository.findByAuthToken(authToken);
+    }
+
+    @Override
     public UserResponseDto get(UUID id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {

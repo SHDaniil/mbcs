@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface IUserService {
 
+    User getByAuthToken(UUID authToken);
+
     UserResponseDto get(UUID id);
 
     List<UserResponseDto> getAll();

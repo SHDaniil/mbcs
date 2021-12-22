@@ -2,8 +2,10 @@ package com.tsu.projectX.controllers;
 
 import com.tsu.projectX.data.requestDto.UserTeam;
 import com.tsu.projectX.data.responseDto.TeamResponseDto;
+import com.tsu.projectX.entities.User;
 import com.tsu.projectX.services.interfaces.IAuthService;
 import com.tsu.projectX.services.interfaces.ITeamService;
+import com.tsu.projectX.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ import static com.tsu.projectX.config.AuthConfig.*;
 @RequestMapping("/teams")
 public class TeamController {
 
+    @Autowired
+    private IUserService userService;
     @Autowired
     private ITeamService teamService;
     @Autowired
@@ -61,6 +65,10 @@ public class TeamController {
         if (!accessible) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        User user = userService.getByAuthToken(authToken);
+        if (!teamService.compare(user.getManagingTeam(), request.getTeamId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         boolean added = teamService.addCoach(request.getTeamId(), request.getUserId());
         return added
@@ -91,6 +99,10 @@ public class TeamController {
         if (!accessible) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        User user = userService.getByAuthToken(authToken);
+        if (!teamService.compare(user.getCouchingTeam(), request.getTeamId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         boolean added = teamService.addPlayer(request.getTeamId(), request.getUserId());
         return added
@@ -105,6 +117,10 @@ public class TeamController {
         boolean accessible = authService.checkAuthAndPermission(authToken, ROLE_ADMIN, ROLE_MANAGER);
         if (!accessible) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = userService.getByAuthToken(authToken);
+        if (!teamService.compare(user.getManagingTeam(), request.getTeamId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         boolean deleted = teamService.deleteCoach(request.getTeamId(), request.getUserId());
@@ -135,6 +151,10 @@ public class TeamController {
         boolean accessible = authService.checkAuthAndPermission(authToken, ROLE_ADMIN, ROLE_MANAGER, ROLE_COACH);
         if (!accessible) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = userService.getByAuthToken(authToken);
+        if (!teamService.compare(user.getCouchingTeam(), request.getTeamId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         boolean deleted = teamService.deletePlayer(request.getTeamId(), request.getUserId());
